@@ -1,28 +1,57 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="row">
+    <div class="alert alert-danger" v-if="error">{{ error }}</div>
+    <Sidebar :user="user" />
+    <Content :details="details" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import axios from "axios";
+import Content from "./components/Content.vue";
+import Sidebar from "./components/Sidebar.vue";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    Content,
+    Sidebar
+  },
+  async created() {
+    try {
+      const result = await Promise.all([
+        this.getStudentDetails(),
+        this.getUserInfo()
+      ]);
+      this.details = result[0].data.detailsData;
+      this.user = result[1].data.userData;
+    } catch (e) {
+      this.error = "Произошла непредвиденная ошибка!";
+    }
+  },
+  data() {
+    return {
+      details: {
+        columns: [],
+        rows: []
+      },
+      error: "",
+      user: {}
+    };
+  },
+  methods: {
+    getStudentDetails() {
+      return axios.post(`/studname/detail?id=${this.studentId}`);
+    },
+    getUserInfo() {
+      return axios.get("/user/get-info");
+    }
+  },
+  props: {
+    studentId: {
+      required: true,
+      type: Number
+    }
   }
 };
 </script>
-
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
