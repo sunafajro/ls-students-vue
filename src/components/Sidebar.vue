@@ -12,15 +12,53 @@
       <div v-if="user.role"><i>{{ user.role }}</i></div>
       <div v-if="user.roleId === '4'">{{ user.office }}</div>
     </div>
+    <div v-if="Object.keys(user).length">
+      <h4>Фильтры:</h4>
+      <form @submit.prevent="onSubmit">
+        <div class="form-group">
+          <select class="form-control form-control-sm" v-model="year">
+            <option :key="`opt-${item.value}`" v-for="item in years" :value="item.value">{{ item.text }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-sm btn-info btn-block"><span class="fa fa-filter" aria-hidden="true"></span> Применить</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  created() {
+    this.year = this.filter;
+  },
+  data() {
+    return {
+      year: ""
+    };
+  },
+  methods: {
+    onSubmit() {
+      this.setFilter(this.year);
+    }
+  },
   props: {
+    filter: {
+      required: true,
+      type: String
+    },
+    setFilter: {
+      required: true,
+      type: Function
+    },
     user: {
       required: true,
       type: Object
+    },
+    years: {
+      required: true,
+      type: Array
     }
   }
 };
