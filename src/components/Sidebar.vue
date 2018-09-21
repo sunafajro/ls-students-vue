@@ -1,6 +1,7 @@
 <template>
   <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
-    <div class="well well-sm small" v-if="Object.keys(user).length">
+    <div class="alert alert-danger" v-if="typeof user !== 'object'">Ошибка загрузки данных!</div>
+    <div class="well well-sm small" v-if="typeof user === 'object' && Object.keys(user).length">
       <div v-if="!user.teacherId"><b v-if="user.name">{{ user.name }}</b></div>
       <div v-if="user.teacherId">
         <b v-if="user.name">
@@ -12,7 +13,7 @@
       <div v-if="user.role"><i>{{ user.role }}</i></div>
       <div v-if="user.roleId === '4'">{{ user.office }}</div>
     </div>
-    <div v-if="Object.keys(user).length">
+    <div v-if="Array.isArray(years) && years.length">
       <h4>Фильтры:</h4>
       <form @submit.prevent="onSubmit">
         <div class="form-group">
