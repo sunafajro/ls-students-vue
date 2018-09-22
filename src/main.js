@@ -10,7 +10,7 @@ new Vue({
   render: h =>
     h(App, {
       props: {
-        studentId: el.dataset.student
+        studentId: parseInt(el.dataset.student)
       }
     })
 }).$mount("#app");
