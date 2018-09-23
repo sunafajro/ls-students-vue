@@ -52,14 +52,14 @@ export default {
   data() {
     return {
       colors: {
-        "счёт": "warning",
-        "оплата": "success"
+        счёт: "warning",
+        оплата: "success"
       }
     };
   },
   filters: {
     formatDate(date) {
-      return moment(date).format('DD.MM.YYYY');
+      return moment(date).format("DD.MM.YYYY");
     },
     formatNumber(value) {
       return numeral(value).format("0,0");
