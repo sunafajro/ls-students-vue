@@ -1,4 +1,4 @@
-# ls-student-vue
+# Students VueJS application for language-school backend
 
 ## Project setup
 ```
