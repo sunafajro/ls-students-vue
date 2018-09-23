@@ -6,19 +6,28 @@
       </thead>
       <tbody v-if="rows.length">
         <tr :key="`tr-${row.id}`" v-for="row in rows" >
-          <td :class="column.id === 'type' ? row[column.id] === 'счёт' ? 'warning' : 'success' : ''" :key="`td-${row.id}-${column.id}`" v-for="column in columns" v-if="column.show">{{ row[column.id] }}</td>
+          <td :class="column.id === 'type' ? colors[row[column.id]] : ''" :key="`td-${row.id}-${column.id}`" v-for="column in columns" v-if="column.show">
+            <span v-if="column.id === 'date'">{{ row[column.id] | formatDate }}</span>
+            <span v-if="column.id === 'sum'">{{ row[column.id] | formatNumber }}</span>
+            <span v-if="column.id !== 'date' && column.id !== 'sum'">{{ row[column.id] }}</span>
+          </td>
         </tr>
       </tbody>
     </table>
     <div v-if="rows.length">
-      <p><b>Всего по счетам:</b> {{ total.invoices }} р<br />
-      <b>Всего по оплатам:</b> {{ total.payments }} р<br />
-      <b>Оплаты - счета:</b> {{ total.all }} р</p>
+      <p><b>Всего по счетам:</b> {{ total.invoices | formatNumber }} р<br />
+      <b>Всего по оплатам:</b> {{ total.payments | formatNumber }} р<br />
+      <b>Оплаты - счета:</b> {{ total.all | formatNumber }} р</p>
     </div>
   </div>
 </template>
 
 <script>
+import moment from "moment";
+import numeral from "numeral";
+
+moment.locale("ru");
+
 export default {
   computed: {
     total() {
@@ -38,6 +47,22 @@ export default {
         payments,
         all: payments - invoices
       };
+    }
+  },
+  data() {
+    return {
+      colors: {
+        "счёт": "warning",
+        "оплата": "success"
+      }
+    };
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format('DD.MM.YYYY');
+    },
+    formatNumber(value) {
+      return numeral(value).format("0,0");
     }
   },
   props: {
